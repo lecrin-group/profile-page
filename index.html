@@ -153,6 +153,13 @@
     font-size:11.5px;color:var(--sub);line-height:1.7;letter-spacing:.2px;
     margin:6px 4px 0;padding-left:2px;
   }
+  .divider{
+    display:flex;align-items:center;gap:12px;
+    margin:22px 2px 14px;
+    font-size:11px;color:var(--sub);letter-spacing:2px;
+    font-family:"Cormorant Garamond",serif;text-transform:uppercase;
+  }
+  .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line);}
   /* ---- toast ---- */
   .toast{
     position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(20px);
@@ -247,11 +254,11 @@ const DATA = {
       ],note:'※ WeChat・KakaoTalk はQR/リンクからの直接追加に対応していません。IDをタップしてコピーし、各アプリのID検索に貼り付けて追加してください。'},
       {t:'Business',links:[
         {ic:'fountain',u:U.lecrin,desc:'プロジェクションマッピング×噴水演出イベントの企画・制作',l1:'株式会社レクラン',l2:'lecrin.biz'},
-        {ic:'globe',u:U.worldpassport,desc:'ドバイ法人設立代行',l1:'World Passport',l2:'worldpassport-dubai.com'},
-        {ic:'camera',u:U.lumixia,desc:'ドバイ フォトウェディングツアー',l1:'Lumixia Photo Wedding',l2:'lumixia-photowedding.com'},
-        {ic:'ring',u:U.jigsaw,desc:'オリジナルジュエリーブランド',l1:'Jigsaw Puzzle',l2:'jigsaw-puzzle.jp'},
+        {ic:'globe',u:U.worldpassport,desc:'ドバイ法人設立代行',l1:'ワールドパスポート',l2:'worldpassport-dubai.com'},
+        {ic:'camera',u:U.lumixia,desc:'ドバイ フォトウェディングツアー',l1:'ルミシア フォトウェディング',l2:'lumixia-photowedding.com'},
         {ic:'heart',u:U.honne,desc:'婚活LIVEトレーニングジム',l1:'ホンネ❤デート',l2:'honne-date.com'},
-        {ic:'page',u:U.honneLp,desc:'ホンネデート LP（ランディングページ）',l1:'ホンネ❤デート LP',l2:'honne-date-ip.netlify.app'}
+        {ic:'page',u:U.honneLp,desc:'ホンネデート LP（ランディングページ）',l1:'ホンネ❤デート LP',l2:'honne-date-ip.netlify.app'},
+        {ic:'ring',u:U.jigsaw,divider:'共同経営の別会社',desc:'オリジナルジュエリーブランド',l1:'合同会社ジグソー',l2:'jigsaw-puzzle.jp'}
       ]},
       {t:'Iki Sushi · Dubai',links:[
         {ic:'instagram',u:U.ikiInsta,l1:'Instagram',l2:'@iki_sushi_dubai'},
@@ -281,9 +288,9 @@ const DATA = {
         {ic:'fountain',u:U.lecrin,desc:'Projection-mapping fountain show production',l1:'LECRIN Co., Ltd.',l2:'lecrin.biz'},
         {ic:'globe',u:U.worldpassport,desc:'Dubai company formation services',l1:'World Passport',l2:'worldpassport-dubai.com'},
         {ic:'camera',u:U.lumixia,desc:'Dubai photo wedding tours',l1:'Lumixia Photo Wedding',l2:'lumixia-photowedding.com'},
-        {ic:'ring',u:U.jigsaw,desc:'Original jewelry brand',l1:'Jigsaw Puzzle',l2:'jigsaw-puzzle.jp'},
         {ic:'heart',u:U.honne,desc:'Live matchmaking training gym',l1:'Honne Date',l2:'honne-date.com'},
-        {ic:'page',u:U.honneLp,desc:'Honne Date landing page',l1:'Honne Date LP',l2:'honne-date-ip.netlify.app'}
+        {ic:'page',u:U.honneLp,desc:'Honne Date landing page',l1:'Honne Date LP',l2:'honne-date-ip.netlify.app'},
+        {ic:'ring',u:U.jigsaw,divider:'A separately co-owned company',desc:'Original jewelry brand',l1:'Jigsaw LLC',l2:'jigsaw-puzzle.jp'}
       ]},
       {t:'Iki Sushi · Dubai',links:[
         {ic:'instagram',u:U.ikiInsta,l1:'Instagram',l2:'@iki_sushi_dubai'},
@@ -314,6 +321,7 @@ function render(lang){
   d.sections.forEach(sec=>{
     html += '<section class="sec"><div class="sec-t">'+sec.t+'</div>';
     sec.links.forEach(k=>{
+      if(k.divider) html += '<div class="divider"><span>'+k.divider+'</span></div>';
       if(k.copy){
         html += '<a class="link" href="javascript:void(0)" onclick="copyId(\''+k.copy+'\',this)">';
       } else {
