@@ -108,13 +108,14 @@
   /* ---- sparkles (金粉) ---- */
   .sparkles{position:absolute;inset:0;z-index:2;pointer-events:none;}
   .sparkles i{
-    position:absolute;width:4px;height:4px;border-radius:50%;
-    background:radial-gradient(circle,#f4e4a8 0%,#d9b86a 45%,rgba(217,184,106,0) 70%);
-    opacity:0;animation:twinkle 4.5s ease-in-out infinite;
+    position:absolute;border-radius:50%;
+    background:radial-gradient(circle,#f6ecc6 0%,#d9b86a 50%,rgba(217,184,106,0) 72%);
+    box-shadow:0 0 4px 1px rgba(217,184,106,.4);
+    opacity:0;animation:twinkle 4.4s ease-in-out infinite;
   }
   @keyframes twinkle{
     0%,100%{opacity:0;transform:scale(.4);}
-    50%{opacity:.95;transform:scale(1.25);}
+    50%{opacity:.85;transform:scale(1.2);}
   }
   /* ---- lang switch ---- */
   .lang{
@@ -575,8 +576,8 @@ function render(lang){
   if(sp){
     var sphtml='';
     for(var s=0;s<14;s++){
-      var x=Math.random()*100, y=Math.random()*70, dl=(Math.random()*4).toFixed(2), sc=(0.6+Math.random()*1.1).toFixed(2);
-      sphtml+='<i style="left:'+x.toFixed(1)+'%;top:'+y.toFixed(1)+'%;animation-delay:'+dl+'s;transform:scale('+sc+')"></i>';
+      var x=Math.random()*100, y=Math.random()*80, dl=(Math.random()*4.4).toFixed(2), sz=(2.5+Math.random()*3).toFixed(1), dur=(3.6+Math.random()*2).toFixed(1);
+      sphtml+='<i style="left:'+x.toFixed(1)+'%;top:'+y.toFixed(1)+'%;width:'+sz+'px;height:'+sz+'px;animation-delay:'+dl+'s;animation-duration:'+dur+'s"></i>';
     }
     sp.innerHTML=sphtml;
   }
