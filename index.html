@@ -48,6 +48,11 @@
     justify-content:center;
     text-align:center;
     overflow:hidden;
+    padding-top:96px;
+    box-sizing:border-box;
+  }
+  @media(max-width:400px){
+    .hero{padding-top:88px;aspect-ratio:auto;min-height:78vw;}
   }
   .hero::before{
     content:"";position:absolute;inset:-4%;
@@ -242,10 +247,8 @@
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
   /* ---- anim ---- */
   @keyframes rise{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-  .fade .sec-t{opacity:0;animation:rise .7s ease forwards;}
-  /* scroll reveal */
-  .reveal{opacity:0;transform:translateY(22px) scale(.985);transition:opacity .7s cubic-bezier(.2,.7,.3,1),transform .7s cubic-bezier(.2,.7,.3,1);}
-  .reveal.in{opacity:1;transform:translateY(0) scale(1);}
+  /* scroll reveal は無効化（カードは最初から表示） */
+  .reveal{opacity:1;transform:none;}
   @media(prefers-reduced-motion:reduce){
     .reveal{opacity:1;transform:none;transition:none;}
     .hero .name .ch,.hero .name-ja,.hero .role,.hero-inner{animation:none;opacity:1;transform:none;filter:none;}
@@ -613,36 +616,8 @@ function render(lang){
 }
 
 function setupReveal(){
-  var wrap = document.getElementById('wrap');
-  // sec-t に軽い遅延フェード
-  var sts = wrap.querySelectorAll('.sec-t');
-  sts.forEach(function(el,i){ el.style.animationDelay = (0.1+i*0.12).toFixed(2)+'s'; });
-
-  var items = wrap.querySelectorAll('.reveal');
-  if(!('IntersectionObserver' in window)){
-    items.forEach(function(el){ el.classList.add('in'); });
-    return;
-  }
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){
-        var el=e.target;
-        var delay = parseFloat(el.dataset.d||0);
-        setTimeout(function(){ el.classList.add('in'); }, delay);
-        io.unobserve(el);
-      }
-    });
-  }, {threshold:0.01, rootMargin:'0px 0px 5% 0px'});
-
-  // 同時に画面内に入った隣接アイテムを少しずつ遅らせて“スタッガード”に
-  var prevTop=null, step=0;
-  items.forEach(function(el){
-    var top = el.getBoundingClientRect().top;
-    if(prevTop!==null && Math.abs(top-prevTop)<260){ step+=70; } else { step=0; }
-    prevTop=top;
-    el.dataset.d = step;
-    io.observe(el);
-  });
+  /* スクロール連動アニメは無効化（読み込み遅延に見えるため）。
+     reveal/in クラスは残置するが CSS 側で常時表示になっている */
 }
 
 function copyId(id, el){
