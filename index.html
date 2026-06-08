@@ -73,22 +73,30 @@
   /* ---- lang switch ---- */
   .lang{
     position:fixed;
-    top:18px;right:18px;
+    top:14px;right:14px;
     display:flex;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+    gap:2px;
+    max-width:min(64vw,260px);
     background:var(--card);
     border:1px solid var(--line);
-    border-radius:999px;
-    padding:3px;
+    border-radius:16px;
+    padding:4px;
     z-index:50;
     box-shadow:0 2px 10px rgba(0,0,0,.04);
   }
   .lang button{
     border:none;background:none;cursor:pointer;
-    font-family:"Cormorant Garamond",serif;
-    font-size:13px;letter-spacing:1px;font-weight:600;
-    padding:5px 13px;border-radius:999px;
-    color:var(--sub);
+    font-family:"Zen Kaku Gothic New",sans-serif;
+    font-size:11px;letter-spacing:.3px;font-weight:500;
+    padding:4px 9px;border-radius:999px;
+    color:var(--sub);white-space:nowrap;
     transition:background .25s,color .25s;
+  }
+  @media(max-width:400px){
+    .lang{top:10px;right:10px;padding:3px;gap:1px;}
+    .lang button{font-size:10.5px;padding:4px 7px;}
   }
   .lang button.on{background:var(--ink);color:#fff;}
   /* ---- header ---- */
@@ -131,6 +139,9 @@
   }
   a.link:hover{transform:translateY(-2px);border-color:var(--ink);background:var(--hover);}
   a.link:active{transform:translateY(0);}
+  a.link.biz-link{padding:18px 19px;gap:16px;border-radius:16px;}
+  a.link.biz-link .ic{width:44px;height:44px;border-radius:12px;font-size:21px;}
+  a.link.biz-link .ic svg{width:22px;height:22px;}
   .ic{
     width:38px;height:38px;flex:none;border-radius:10px;
     display:flex;align-items:center;justify-content:center;
@@ -139,8 +150,9 @@
   .ic svg{width:19px;height:19px;}
   .lt{flex:1;min-width:0;}
   .lt .desc{font-size:11px;color:var(--sub);font-weight:400;letter-spacing:.3px;margin-bottom:4px;line-height:1.5;white-space:normal;}
+  .lt.biz .desc{font-size:12.5px;color:#6b6760;font-weight:500;margin-bottom:5px;line-height:1.5;}
   .lt .l1{display:inline-block;font-size:14.5px;font-weight:400;letter-spacing:.3px;margin-right:9px;}
-  .lt.biz .l1{font-size:16px;font-weight:700;letter-spacing:.4px;display:block;margin-right:0;margin-bottom:2px;}
+  .lt.biz .l1{font-size:17px;font-weight:700;letter-spacing:.4px;display:block;margin-right:0;margin-bottom:3px;}
   .lt .l2{font-size:11.5px;color:var(--sub);letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .arr{color:var(--sub);font-size:14px;flex:none;transition:transform .25s ease;}
   a.link:hover .arr{transform:translateX(3px);}
@@ -160,6 +172,11 @@
     font-family:"Cormorant Garamond",serif;text-transform:uppercase;
   }
   .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line);}
+  .divider.main{
+    font-size:13px;color:var(--ink);font-weight:600;letter-spacing:3px;
+    margin:8px 2px 16px;
+  }
+  .divider.main::before,.divider.main::after{background:var(--ink);opacity:.35;}
   /* ---- toast ---- */
   .toast{
     position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(20px);
@@ -179,13 +196,26 @@
   .fade .sec:nth-of-type(2){opacity:0;animation:rise .8s ease forwards;animation-delay:.25s;}
   .fade .sec:nth-of-type(3){opacity:0;animation:rise .8s ease forwards;animation-delay:.35s;}
   .fade .sec:nth-of-type(4){opacity:0;animation:rise .8s ease forwards;animation-delay:.45s;}
+  /* ---- RTL (Arabic) ---- */
+  [dir="rtl"] .lang{right:auto;left:14px;justify-content:flex-start;}
+  @media(max-width:400px){[dir="rtl"] .lang{right:auto;left:10px;}}
+  [dir="rtl"] .link{flex-direction:row-reverse;text-align:right;}
+  [dir="rtl"] .lt{text-align:right;}
+  [dir="rtl"] .arr{transform:scaleX(-1);}
+  [dir="rtl"] a.link:hover .arr{transform:scaleX(-1) translateX(3px);}
+  [dir="rtl"] .note{text-align:right;}
 </style>
 </head>
 <body>
 
 <div class="lang">
-  <button id="btn-ja" class="on" onclick="setLang('ja')">JA</button>
-  <button id="btn-en" onclick="setLang('en')">EN</button>
+  <button id="btn-ja" class="on" onclick="setLang('ja')">日本語</button>
+  <button id="btn-en" onclick="setLang('en')">English</button>
+  <button id="btn-ko" onclick="setLang('ko')">한국어</button>
+  <button id="btn-zh" onclick="setLang('zh')">中文</button>
+  <button id="btn-ar" onclick="setLang('ar')">العربية</button>
+  <button id="btn-ru" onclick="setLang('ru')">Русский</button>
+  <button id="btn-es" onclick="setLang('es')">Español</button>
 </div>
 
 <div class="hero" id="hero"></div>
@@ -211,6 +241,10 @@ const IC = {
   ring:'<span class="ic">💍</span>',
   heart:'<span class="ic" style="background:#fff;border-color:var(--line);color:#E0245E;"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>',
   page:'<span class="ic" style="background:#fff;border-color:var(--line);color:#FF5E8A;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>',
+  bell:'<span class="ic">🛎️</span>',
+  lantern:'<span class="ic">🏮</span>',
+  gem:'<span class="ic">💎</span>',
+  sushi:'<span class="ic">🍣</span>',
   wechat:'<span class="ic" style="background-image:url(data:image/jpeg;base64,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);background-size:cover;background-position:center;border:none;"></span>',
   kakao:'<span class="ic" style="background-image:url(data:image/jpeg;base64,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);background-size:cover;background-position:center;border:none;"></span>',
 };
@@ -230,6 +264,9 @@ const U = {
   jigsaw:'https://jigsaw-puzzle.jp/',
   honne:'https://honne-date.com/',
   honneLp:'https://honne-date-ip.netlify.app/',
+  pocket:'https://lecrin-group.github.io/pocket-concierge/',
+  urushi:'https://lecrin-group.github.io/concierge-desk/',
+  gemstone:'https://lecrin-group.github.io/rare-gemstone/',
   ikiInsta:'https://www.instagram.com/iki_sushi_dubai',
   ikiMap:'https://www.google.com/maps?q=%E3%82%A2%E3%83%A9%E3%83%96%E9%A6%96%E9%95%B7%E5%9B%BD%E9%80%A3%E9%82%A6+Dubai,+Iki+-%E7%B2%8B-&ftid=0x3e5f6fbdee818437:0xbca0a67735c2b590',
   officeMap:'https://www.google.com/maps?q=%E3%80%92150-0001+%E6%9D%B1%E4%BA%AC%E9%83%BD%E6%B8%8B%E8%B0%B7%E5%8C%BA%E7%A5%9E%E5%AE%AE%E5%89%8D%EF%BC%96%E4%B8%81%E7%9B%AE%EF%BC%91%EF%BC%99%E2%88%92%EF%BC%91%EF%BC%92+%E3%82%A2%E3%82%AA%E3%83%A4%E3%83%9E%E3%83%93%E3%83%AB&ftid=0x60188ddf522677bd:0x482ae633bd64febe'
@@ -253,19 +290,18 @@ const DATA = {
         {ic:'kakao',copy:'nagisa_harajuku',l1:'KakaoTalk',l2:'ID: nagisa_harajuku（タップでコピー）'}
       ],note:'※ WeChat・KakaoTalk はQR/リンクからの直接追加に対応していません。IDをタップしてコピーし、各アプリのID検索に貼り付けて追加してください。'},
       {t:'Business',links:[
-        {ic:'fountain',u:U.lecrin,desc:'プロジェクションマッピング×噴水演出イベントの企画・制作',l1:'株式会社レクラン',l2:'lecrin.biz'},
+        {ic:'fountain',u:U.lecrin,divider:'株式会社レクラン',desc:'プロジェクションマッピング×噴水演出イベントの企画・制作',l1:'レクラン -Lecrin-',l2:'lecrin.biz'},
         {ic:'globe',u:U.worldpassport,desc:'ドバイ法人設立代行',l1:'ワールドパスポート',l2:'worldpassport-dubai.com'},
         {ic:'camera',u:U.lumixia,desc:'ドバイ フォトウェディングツアー',l1:'ルミシア フォトウェディング',l2:'lumixia-photowedding.com'},
         {ic:'heart',u:U.honne,desc:'婚活LIVEトレーニングジム',l1:'ホンネ❤デート',l2:'honne-date.com'},
         {ic:'page',u:U.honneLp,desc:'ホンネデート LP（ランディングページ）',l1:'ホンネ❤デート LP',l2:'honne-date-ip.netlify.app'},
-        {ic:'ring',u:U.jigsaw,divider:'共同経営の別会社',desc:'オリジナルジュエリーブランド',l1:'合同会社ジグソー',l2:'jigsaw-puzzle.jp'}
-      ]},
-      {t:'Iki Sushi · Dubai',links:[
+        {ic:'bell',u:U.pocket,desc:'コンシェルジュ型アテンドサービス',l1:'ポケットコンシェル',l2:'pocket-concierge'},
+        {ic:'lantern',u:U.urushi,desc:'エグゼクティブ向けコンシェルジュサービス',l1:'漆 -URUSHI-',l2:'concierge-desk'},
+        {ic:'gem',u:U.gemstone,desc:'希少カラーストーンの販売・鑑定・輸出入',l1:'レアジェムストーン',l2:'rare-gemstone'},
+        {ic:'sushi',u:U.ikiMap,divider:'IKI Co., Ltd',desc:'ドバイ 江戸前寿司',l1:'粋 -IKI-',l2:'Dubai'},
         {ic:'instagram',u:U.ikiInsta,l1:'Instagram',l2:'@iki_sushi_dubai'},
-        {ic:'map',u:U.ikiMap,l1:'Map',l2:'Iki -粋- Dubai'}
-      ]},
-      {t:'Office',links:[
-        {ic:'map',u:U.officeMap,l1:'Office',l2:'渋谷区神宮前 アオヤマビル'}
+        {ic:'map',u:U.ikiMap,l1:'Map',l2:'粋 -IKI- Dubai'},
+        {ic:'ring',u:U.jigsaw,divider:'共同経営の別会社',desc:'オリジナルジュエリーブランド',l1:'合同会社ジグソー',l2:'jigsaw-puzzle.jp'}
       ]}
     ]
   },
@@ -285,19 +321,173 @@ const DATA = {
         {ic:'kakao',copy:'nagisa_harajuku',l1:'KakaoTalk',l2:'ID: nagisa_harajuku (tap to copy)'}
       ],note:'* WeChat & KakaoTalk don\'t support adding via QR or direct link. Tap the ID to copy it, then paste it into the app\'s ID search to add me.'},
       {t:'Business',links:[
-        {ic:'fountain',u:U.lecrin,desc:'Projection-mapping fountain show production',l1:'LECRIN Co., Ltd.',l2:'lecrin.biz'},
+        {ic:'fountain',u:U.lecrin,divider:'LECRIN Co., Ltd.',desc:'Projection-mapping fountain show production',l1:'Lecrin',l2:'lecrin.biz'},
         {ic:'globe',u:U.worldpassport,desc:'Dubai company formation services',l1:'World Passport',l2:'worldpassport-dubai.com'},
         {ic:'camera',u:U.lumixia,desc:'Dubai photo wedding tours',l1:'Lumixia Photo Wedding',l2:'lumixia-photowedding.com'},
         {ic:'heart',u:U.honne,desc:'Live matchmaking training gym',l1:'Honne Date',l2:'honne-date.com'},
         {ic:'page',u:U.honneLp,desc:'Honne Date landing page',l1:'Honne Date LP',l2:'honne-date-ip.netlify.app'},
-        {ic:'ring',u:U.jigsaw,divider:'A separately co-owned company',desc:'Original jewelry brand',l1:'Jigsaw LLC',l2:'jigsaw-puzzle.jp'}
-      ]},
-      {t:'Iki Sushi · Dubai',links:[
+        {ic:'bell',u:U.pocket,desc:'Concierge-style attend service',l1:'Pocket Concierge',l2:'pocket-concierge'},
+        {ic:'lantern',u:U.urushi,desc:'Executive concierge service',l1:'URUSHI',l2:'concierge-desk'},
+        {ic:'gem',u:U.gemstone,desc:'Rare colored gemstones: sales, appraisal & trade',l1:'Rare Gemstone',l2:'rare-gemstone'},
+        {ic:'sushi',u:U.ikiMap,divider:'IKI Co., Ltd',desc:'Edomae sushi in Dubai',l1:'IKI',l2:'Dubai'},
         {ic:'instagram',u:U.ikiInsta,l1:'Instagram',l2:'@iki_sushi_dubai'},
-        {ic:'map',u:U.ikiMap,l1:'Map',l2:'Iki Sushi, Dubai'}
-      ]},
-      {t:'Office',links:[
-        {ic:'map',u:U.officeMap,l1:'Office',l2:'Jingumae, Shibuya, Tokyo'}
+        {ic:'map',u:U.ikiMap,l1:'Map',l2:'IKI, Dubai'},
+        {ic:'ring',u:U.jigsaw,divider:'A separately co-owned company',desc:'Original jewelry brand',l1:'Jigsaw LLC',l2:'jigsaw-puzzle.jp'}
+      ]}
+    ]
+  },
+  ko:{
+    nameJa:'',
+    role:'<b>LECRIN Co., Ltd.</b> 대표이사',
+    sections:[
+      {t:'Contact',links:[
+        {ic:'email',u:U.email,l1:'Email',l2:'nagisa.sato@lecrin.biz'},
+        {ic:'phone',u:U.phone,l1:'전화',l2:'+81 80-6767-6677'},
+        {ic:'line',u:U.line,l1:'LINE',l2:'친구 추가'},
+        {ic:'whatsapp',u:U.whatsapp,l1:'WhatsApp',l2:'+81 80-6767-6677'},
+        {ic:'telegram',u:U.telegram,l1:'Telegram',l2:'@nagisa_sato'},
+        {ic:'discord',u:U.discord,l1:'Discord',l2:'DM으로 연락'},
+        {ic:'instagram',u:U.instagram,l1:'Instagram',l2:'@nagisadaoo'},
+        {ic:'wechat',copy:'nagisa8888',l1:'WeChat',l2:'ID: nagisa8888 (탭하여 복사)'},
+        {ic:'kakao',copy:'nagisa_harajuku',l1:'KakaoTalk',l2:'ID: nagisa_harajuku (탭하여 복사)'}
+      ],note:'※ WeChat·KakaoTalk은 QR/링크로 직접 추가할 수 없습니다. ID를 탭하여 복사한 후 각 앱의 ID 검색에 붙여넣어 추가해 주세요.'},
+      {t:'Business',links:[
+        {ic:'fountain',u:U.lecrin,divider:'LECRIN Co., Ltd.',desc:'프로젝션 매핑×분수 연출 이벤트 기획·제작',l1:'Lecrin',l2:'lecrin.biz'},
+        {ic:'globe',u:U.worldpassport,desc:'두바이 법인 설립 대행',l1:'World Passport',l2:'worldpassport-dubai.com'},
+        {ic:'camera',u:U.lumixia,desc:'두바이 포토 웨딩 투어',l1:'Lumixia Photo Wedding',l2:'lumixia-photowedding.com'},
+        {ic:'heart',u:U.honne,desc:'결혼 활동 라이브 트레이닝 짐',l1:'Honne Date',l2:'honne-date.com'},
+        {ic:'page',u:U.honneLp,desc:'Honne Date 랜딩 페이지',l1:'Honne Date LP',l2:'honne-date-ip.netlify.app'},
+        {ic:'bell',u:U.pocket,desc:'컨시어지형 어텐드 서비스',l1:'Pocket Concierge',l2:'pocket-concierge'},
+        {ic:'lantern',u:U.urushi,desc:'임원·VIP 대상 컨시어지 서비스',l1:'URUSHI',l2:'concierge-desk'},
+        {ic:'gem',u:U.gemstone,desc:'희귀 컬러 스톤 판매·감정·수출입',l1:'Rare Gemstone',l2:'rare-gemstone'},
+        {ic:'sushi',u:U.ikiMap,divider:'IKI Co., Ltd',desc:'두바이 에도마에 스시',l1:'IKI',l2:'Dubai'},
+        {ic:'instagram',u:U.ikiInsta,l1:'Instagram',l2:'@iki_sushi_dubai'},
+        {ic:'map',u:U.ikiMap,l1:'Map',l2:'IKI, Dubai'},
+        {ic:'ring',u:U.jigsaw,divider:'공동 경영 별도 법인',desc:'오리지널 주얼리 브랜드',l1:'Jigsaw LLC',l2:'jigsaw-puzzle.jp'}
+      ]}
+    ]
+  },
+  zh:{
+    nameJa:'',
+    role:'<b>LECRIN Co., Ltd.</b> 代表董事',
+    sections:[
+      {t:'联系方式',links:[
+        {ic:'email',u:U.email,l1:'Email',l2:'nagisa.sato@lecrin.biz'},
+        {ic:'phone',u:U.phone,l1:'电话',l2:'+81 80-6767-6677'},
+        {ic:'line',u:U.line,l1:'LINE',l2:'添加好友'},
+        {ic:'whatsapp',u:U.whatsapp,l1:'WhatsApp',l2:'+81 80-6767-6677'},
+        {ic:'telegram',u:U.telegram,l1:'Telegram',l2:'@nagisa_sato'},
+        {ic:'discord',u:U.discord,l1:'Discord',l2:'私信联系'},
+        {ic:'instagram',u:U.instagram,l1:'Instagram',l2:'@nagisadaoo'},
+        {ic:'wechat',copy:'nagisa8888',l1:'微信 WeChat',l2:'ID: nagisa8888（点击复制）'},
+        {ic:'kakao',copy:'nagisa_harajuku',l1:'KakaoTalk',l2:'ID: nagisa_harajuku（点击复制）'}
+      ],note:'※ 微信·KakaoTalk 不支持通过二维码/链接直接添加。请点击 ID 复制后，在各 App 的 ID 搜索中粘贴添加。'},
+      {t:'业务',links:[
+        {ic:'fountain',u:U.lecrin,divider:'LECRIN Co., Ltd.',desc:'投影映射×喷泉演出活动的策划与制作',l1:'Lecrin',l2:'lecrin.biz'},
+        {ic:'globe',u:U.worldpassport,desc:'迪拜公司注册代办',l1:'World Passport',l2:'worldpassport-dubai.com'},
+        {ic:'camera',u:U.lumixia,desc:'迪拜婚纱摄影旅拍',l1:'Lumixia Photo Wedding',l2:'lumixia-photowedding.com'},
+        {ic:'heart',u:U.honne,desc:'婚恋实战训练馆',l1:'Honne Date',l2:'honne-date.com'},
+        {ic:'page',u:U.honneLp,desc:'Honne Date 落地页',l1:'Honne Date LP',l2:'honne-date-ip.netlify.app'},
+        {ic:'bell',u:U.pocket,desc:'管家式陪同服务',l1:'Pocket Concierge',l2:'pocket-concierge'},
+        {ic:'lantern',u:U.urushi,desc:'面向高管的礼宾服务',l1:'URUSHI',l2:'concierge-desk'},
+        {ic:'gem',u:U.gemstone,desc:'稀有彩色宝石的销售·鉴定·进出口',l1:'Rare Gemstone',l2:'rare-gemstone'},
+        {ic:'sushi',u:U.ikiMap,divider:'IKI Co., Ltd',desc:'迪拜江户前寿司',l1:'IKI',l2:'Dubai'},
+        {ic:'instagram',u:U.ikiInsta,l1:'Instagram',l2:'@iki_sushi_dubai'},
+        {ic:'map',u:U.ikiMap,l1:'Map',l2:'IKI, Dubai'},
+        {ic:'ring',u:U.jigsaw,divider:'共同经营的另一家公司',desc:'原创珠宝品牌',l1:'Jigsaw LLC',l2:'jigsaw-puzzle.jp'}
+      ]}
+    ]
+  },
+  ar:{
+    nameJa:'',
+    role:'الرئيس التنفيذي، <b>LECRIN Co., Ltd.</b>',
+    sections:[
+      {t:'التواصل',links:[
+        {ic:'email',u:U.email,l1:'Email',l2:'nagisa.sato@lecrin.biz'},
+        {ic:'phone',u:U.phone,l1:'الهاتف',l2:'+81 80-6767-6677'},
+        {ic:'line',u:U.line,l1:'LINE',l2:'إضافة صديق'},
+        {ic:'whatsapp',u:U.whatsapp,l1:'WhatsApp',l2:'+81 80-6767-6677'},
+        {ic:'telegram',u:U.telegram,l1:'Telegram',l2:'@nagisa_sato'},
+        {ic:'discord',u:U.discord,l1:'Discord',l2:'تواصل عبر الرسائل الخاصة'},
+        {ic:'instagram',u:U.instagram,l1:'Instagram',l2:'@nagisadaoo'},
+        {ic:'wechat',copy:'nagisa8888',l1:'WeChat',l2:'ID: nagisa8888 (انقر للنسخ)'},
+        {ic:'kakao',copy:'nagisa_harajuku',l1:'KakaoTalk',l2:'ID: nagisa_harajuku (انقر للنسخ)'}
+      ],note:'※ لا يدعم WeChat وKakaoTalk الإضافة المباشرة عبر رمز QR أو الرابط. انقر على المعرّف لنسخه ثم الصقه في خانة البحث عن المعرّف داخل كل تطبيق للإضافة.'},
+      {t:'الأعمال',links:[
+        {ic:'fountain',u:U.lecrin,divider:'LECRIN Co., Ltd.',desc:'تخطيط وإنتاج عروض النوافير مع الإسقاط الضوئي',l1:'Lecrin',l2:'lecrin.biz'},
+        {ic:'globe',u:U.worldpassport,desc:'خدمات تأسيس الشركات في دبي',l1:'World Passport',l2:'worldpassport-dubai.com'},
+        {ic:'camera',u:U.lumixia,desc:'جولات تصوير الزفاف في دبي',l1:'Lumixia Photo Wedding',l2:'lumixia-photowedding.com'},
+        {ic:'heart',u:U.honne,desc:'صالة تدريب مباشر على المواعدة والزواج',l1:'Honne Date',l2:'honne-date.com'},
+        {ic:'page',u:U.honneLp,desc:'صفحة هبوط Honne Date',l1:'Honne Date LP',l2:'honne-date-ip.netlify.app'},
+        {ic:'bell',u:U.pocket,desc:'خدمة مرافقة بأسلوب الكونسيرج',l1:'Pocket Concierge',l2:'pocket-concierge'},
+        {ic:'lantern',u:U.urushi,desc:'خدمة كونسيرج للمدراء التنفيذيين',l1:'URUSHI',l2:'concierge-desk'},
+        {ic:'gem',u:U.gemstone,desc:'بيع وتقييم واستيراد وتصدير الأحجار الملونة النادرة',l1:'Rare Gemstone',l2:'rare-gemstone'},
+        {ic:'sushi',u:U.ikiMap,divider:'IKI Co., Ltd',desc:'سوشي إيدومايه في دبي',l1:'IKI',l2:'Dubai'},
+        {ic:'instagram',u:U.ikiInsta,l1:'Instagram',l2:'@iki_sushi_dubai'},
+        {ic:'map',u:U.ikiMap,l1:'Map',l2:'IKI, Dubai'},
+        {ic:'ring',u:U.jigsaw,divider:'شركة منفصلة بإدارة مشتركة',desc:'علامة مجوهرات أصلية',l1:'Jigsaw LLC',l2:'jigsaw-puzzle.jp'}
+      ]}
+    ]
+  },
+  ru:{
+    nameJa:'',
+    role:'Генеральный директор, <b>LECRIN Co., Ltd.</b>',
+    sections:[
+      {t:'Контакты',links:[
+        {ic:'email',u:U.email,l1:'Email',l2:'nagisa.sato@lecrin.biz'},
+        {ic:'phone',u:U.phone,l1:'Телефон',l2:'+81 80-6767-6677'},
+        {ic:'line',u:U.line,l1:'LINE',l2:'Добавить в друзья'},
+        {ic:'whatsapp',u:U.whatsapp,l1:'WhatsApp',l2:'+81 80-6767-6677'},
+        {ic:'telegram',u:U.telegram,l1:'Telegram',l2:'@nagisa_sato'},
+        {ic:'discord',u:U.discord,l1:'Discord',l2:'Написать в ЛС'},
+        {ic:'instagram',u:U.instagram,l1:'Instagram',l2:'@nagisadaoo'},
+        {ic:'wechat',copy:'nagisa8888',l1:'WeChat',l2:'ID: nagisa8888 (нажмите, чтобы скопировать)'},
+        {ic:'kakao',copy:'nagisa_harajuku',l1:'KakaoTalk',l2:'ID: nagisa_harajuku (нажмите, чтобы скопировать)'}
+      ],note:'※ WeChat и KakaoTalk не поддерживают добавление по QR-коду или ссылке. Нажмите на ID, чтобы скопировать его, затем вставьте в поиск по ID в соответствующем приложении.'},
+      {t:'Бизнес',links:[
+        {ic:'fountain',u:U.lecrin,divider:'LECRIN Co., Ltd.',desc:'Планирование и продакшн фонтанных шоу с проекционным мэппингом',l1:'Lecrin',l2:'lecrin.biz'},
+        {ic:'globe',u:U.worldpassport,desc:'Регистрация компаний в Дубае',l1:'World Passport',l2:'worldpassport-dubai.com'},
+        {ic:'camera',u:U.lumixia,desc:'Свадебные фототуры в Дубае',l1:'Lumixia Photo Wedding',l2:'lumixia-photowedding.com'},
+        {ic:'heart',u:U.honne,desc:'Тренинг-зал живой практики знакомств',l1:'Honne Date',l2:'honne-date.com'},
+        {ic:'page',u:U.honneLp,desc:'Лендинг Honne Date',l1:'Honne Date LP',l2:'honne-date-ip.netlify.app'},
+        {ic:'bell',u:U.pocket,desc:'Консьерж-сопровождение',l1:'Pocket Concierge',l2:'pocket-concierge'},
+        {ic:'lantern',u:U.urushi,desc:'Консьерж-сервис для руководителей',l1:'URUSHI',l2:'concierge-desk'},
+        {ic:'gem',u:U.gemstone,desc:'Редкие цветные камни: продажа, оценка, импорт и экспорт',l1:'Rare Gemstone',l2:'rare-gemstone'},
+        {ic:'sushi',u:U.ikiMap,divider:'IKI Co., Ltd',desc:'Эдомаэ-суши в Дубае',l1:'IKI',l2:'Dubai'},
+        {ic:'instagram',u:U.ikiInsta,l1:'Instagram',l2:'@iki_sushi_dubai'},
+        {ic:'map',u:U.ikiMap,l1:'Map',l2:'IKI, Dubai'},
+        {ic:'ring',u:U.jigsaw,divider:'Отдельная компания в совместном управлении',desc:'Оригинальный ювелирный бренд',l1:'Jigsaw LLC',l2:'jigsaw-puzzle.jp'}
+      ]}
+    ]
+  },
+  es:{
+    nameJa:'',
+    role:'CEO, <b>LECRIN Co., Ltd.</b>',
+    sections:[
+      {t:'Contacto',links:[
+        {ic:'email',u:U.email,l1:'Email',l2:'nagisa.sato@lecrin.biz'},
+        {ic:'phone',u:U.phone,l1:'Teléfono',l2:'+81 80-6767-6677'},
+        {ic:'line',u:U.line,l1:'LINE',l2:'Agregar amigo'},
+        {ic:'whatsapp',u:U.whatsapp,l1:'WhatsApp',l2:'+81 80-6767-6677'},
+        {ic:'telegram',u:U.telegram,l1:'Telegram',l2:'@nagisa_sato'},
+        {ic:'discord',u:U.discord,l1:'Discord',l2:'Contáctame por DM'},
+        {ic:'instagram',u:U.instagram,l1:'Instagram',l2:'@nagisadaoo'},
+        {ic:'wechat',copy:'nagisa8888',l1:'WeChat',l2:'ID: nagisa8888 (toca para copiar)'},
+        {ic:'kakao',copy:'nagisa_harajuku',l1:'KakaoTalk',l2:'ID: nagisa_harajuku (toca para copiar)'}
+      ],note:'※ WeChat y KakaoTalk no permiten agregar directamente por QR o enlace. Toca el ID para copiarlo y pégalo en la búsqueda de ID de cada app para agregarme.'},
+      {t:'Negocios',links:[
+        {ic:'fountain',u:U.lecrin,divider:'LECRIN Co., Ltd.',desc:'Planificación y producción de espectáculos de fuentes con projection mapping',l1:'Lecrin',l2:'lecrin.biz'},
+        {ic:'globe',u:U.worldpassport,desc:'Servicios de constitución de empresas en Dubái',l1:'World Passport',l2:'worldpassport-dubai.com'},
+        {ic:'camera',u:U.lumixia,desc:'Tours de fotos de boda en Dubái',l1:'Lumixia Photo Wedding',l2:'lumixia-photowedding.com'},
+        {ic:'heart',u:U.honne,desc:'Gimnasio de entrenamiento en vivo para citas',l1:'Honne Date',l2:'honne-date.com'},
+        {ic:'page',u:U.honneLp,desc:'Landing page de Honne Date',l1:'Honne Date LP',l2:'honne-date-ip.netlify.app'},
+        {ic:'bell',u:U.pocket,desc:'Servicio de acompañamiento tipo conserjería',l1:'Pocket Concierge',l2:'pocket-concierge'},
+        {ic:'lantern',u:U.urushi,desc:'Servicio de conserjería para ejecutivos',l1:'URUSHI',l2:'concierge-desk'},
+        {ic:'gem',u:U.gemstone,desc:'Gemas de color raras: venta, tasación e importación/exportación',l1:'Rare Gemstone',l2:'rare-gemstone'},
+        {ic:'sushi',u:U.ikiMap,divider:'IKI Co., Ltd',desc:'Sushi edomae en Dubái',l1:'IKI',l2:'Dubai'},
+        {ic:'instagram',u:U.ikiInsta,l1:'Instagram',l2:'@iki_sushi_dubai'},
+        {ic:'map',u:U.ikiMap,l1:'Map',l2:'IKI, Dubai'},
+        {ic:'ring',u:U.jigsaw,divider:'Empresa separada de copropiedad',desc:'Marca de joyería original',l1:'Jigsaw LLC',l2:'jigsaw-puzzle.jp'}
       ]}
     ]
   }
@@ -321,11 +511,14 @@ function render(lang){
   d.sections.forEach(sec=>{
     html += '<section class="sec"><div class="sec-t">'+sec.t+'</div>';
     sec.links.forEach(k=>{
-      if(k.divider) html += '<div class="divider"><span>'+k.divider+'</span></div>';
+      if(k.divider){
+        var isMain = (k.divider.indexOf('レクラン')>-1 || k.divider.indexOf('LECRIN')>-1 || k.divider.indexOf('IKI')>-1);
+        html += '<div class="divider'+(isMain?' main':'')+'"><span>'+k.divider+'</span></div>';
+      }
       if(k.copy){
         html += '<a class="link" href="javascript:void(0)" onclick="copyId(\''+k.copy+'\',this)">';
       } else {
-        html += '<a class="link" href="'+k.u+'" target="_blank" rel="noopener">';
+        html += '<a class="link'+(k.desc?' biz-link':'')+'" href="'+k.u+'" target="_blank" rel="noopener">';
       }
       html += IC[k.ic];
       html += '<span class="lt'+(k.desc?' biz':'')+'">';
@@ -370,12 +563,24 @@ function fallbackCopy(text, cb){
 
 function setLang(lang){
   document.documentElement.lang = lang;
-  document.getElementById('btn-ja').classList.toggle('on', lang==='ja');
-  document.getElementById('btn-en').classList.toggle('on', lang==='en');
+  document.documentElement.dir = (lang==='ar') ? 'rtl' : 'ltr';
+  ['ja','en','ko','zh','ar','ru','es'].forEach(function(l){
+    document.getElementById('btn-'+l).classList.toggle('on', lang===l);
+  });
   render(lang);
 }
 
-const initLang = (navigator.language||'ja').toLowerCase().startsWith('en') ? 'en' : 'ja';
+const initLang = (function(){
+  var l = (navigator.language||'ja').toLowerCase();
+  if(l.startsWith('ja')) return 'ja';
+  if(l.startsWith('ko')) return 'ko';
+  if(l.startsWith('zh')) return 'zh';
+  if(l.startsWith('ar')) return 'ar';
+  if(l.startsWith('ru')) return 'ru';
+  if(l.startsWith('es')) return 'es';
+  if(l.startsWith('en')) return 'en';
+  return 'ja';
+})();
 setLang(initLang);
 </script>
 </body>
