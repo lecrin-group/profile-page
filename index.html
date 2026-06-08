@@ -105,17 +105,28 @@
   .hero .role{font-size:12.5px;color:#5d5953;letter-spacing:1.5px;line-height:1.9;text-shadow:0 1px 8px rgba(255,255,255,.85);
     opacity:0;animation:rise .9s ease forwards;animation-delay:1.0s;}
   .hero .role b{font-weight:600;color:var(--ink);}
-  /* ---- sparkles (金粉) ---- */
-  .sparkles{position:absolute;inset:0;z-index:2;pointer-events:none;}
-  .sparkles i{
-    position:absolute;border-radius:50%;
-    background:radial-gradient(circle,#f6ecc6 0%,#d9b86a 50%,rgba(217,184,106,0) 72%);
-    box-shadow:0 0 4px 1px rgba(217,184,106,.4);
-    opacity:0;animation:twinkle 4.4s ease-in-out infinite;
+  /* ---- hero flash (初回ロード時の一閃) ---- */
+  .flash{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden;}
+  .flash::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.95) 0%,rgba(255,250,240,.75) 30%,rgba(255,245,225,0) 70%);
+    opacity:0;animation:flashGlow 1.5s ease-out forwards;
   }
-  @keyframes twinkle{
-    0%,100%{opacity:0;transform:scale(.4);}
-    50%{opacity:.85;transform:scale(1.2);}
+  .flash::after{
+    content:"";position:absolute;top:-30%;left:-60%;
+    width:45%;height:160%;
+    background:linear-gradient(105deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.9) 50%,rgba(255,255,255,0) 100%);
+    transform:skewX(-18deg);
+    animation:flashSweep 1.25s cubic-bezier(.4,0,.2,1) .15s forwards;
+  }
+  @keyframes flashGlow{
+    0%{opacity:0;}
+    12%{opacity:1;}
+    100%{opacity:0;}
+  }
+  @keyframes flashSweep{
+    0%{left:-60%;}
+    100%{left:160%;}
   }
   /* ---- lang switch ---- */
   .lang{
@@ -253,7 +264,8 @@
   @media(prefers-reduced-motion:reduce){
     .reveal{opacity:1;transform:none;transition:none;}
     .hero .name .ch,.hero .name-ja,.hero .role,.hero-inner{animation:none;opacity:1;transform:none;filter:none;}
-    .hero::before,.hero::after,.sparkles i{animation:none;}
+    .hero::before,.hero::after,.flash::before,.flash::after{animation:none;}
+    .flash{display:none;}
   }
   /* ---- RTL (Arabic) ---- */
   [dir="rtl"] .lang{right:auto;left:14px;justify-content:flex-start;}
@@ -557,7 +569,7 @@ function render(lang){
   const d = DATA[lang];
 
   // ---- hero: 全要素を画像の上に ----
-  let hero = '<div class="sparkles" aria-hidden="true"></div>';
+  let hero = '<div class="flash" aria-hidden="true"></div>';
   hero += '<div class="hero-inner">';
   var nm = 'NAGISA SATO';
   var nmHtml = '';
@@ -571,16 +583,6 @@ function render(lang){
   hero += '</div>';
   document.getElementById('hero').innerHTML = hero;
 
-  // ---- sparkles (金粉) 生成 ----
-  var sp = document.querySelector('.sparkles');
-  if(sp){
-    var sphtml='';
-    for(var s=0;s<14;s++){
-      var x=Math.random()*100, y=Math.random()*80, dl=(Math.random()*4.4).toFixed(2), sz=(2.5+Math.random()*3).toFixed(1), dur=(3.6+Math.random()*2).toFixed(1);
-      sphtml+='<i style="left:'+x.toFixed(1)+'%;top:'+y.toFixed(1)+'%;width:'+sz+'px;height:'+sz+'px;animation-delay:'+dl+'s;animation-duration:'+dur+'s"></i>';
-    }
-    sp.innerHTML=sphtml;
-  }
 
   // ---- links ----
   let html = '';
